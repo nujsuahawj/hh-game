@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HmoobHawj - ขายไอดี & เติมเกม</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ซ่อน Scrollbar */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Tab Transitions */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modal Animations */
+        .modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Toast */
+        #toast {
+            transition: all 0.4s ease;
+            transform: translateY(-100%);
+            opacity: 0;
+            z-index: 9999;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Custom File Input */
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-upload-label:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans pb-10">
+
+    <header class="fixed top-0 w-full bg-white shadow-sm z-40 flex items-center justify-between px-4 py-3 md:px-8">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('home')">
+            <div
+                class="bg-brand-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xl shadow-sm">
+                H</div>
+            <h1 class="font-bold text-xl text-gray-800 tracking-tight">Hmoob<span class="text-brand-500">Hawj</span>
+            </h1>
+        </div>
+        <button onclick="openHistory()"
+            class="flex items-center gap-2 px-3 py-1.5 bg-brand-50 text-brand-600 rounded-full font-medium hover:bg-brand-100 transition shadow-sm border border-brand-100">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span class="text-sm">ประวัติ</span>
+        </button>
+    </header>
+
+    <main class="mt-16 px-4 md:px-8 max-w-6xl mx-auto py-6">
+
+        <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-brand-500"></i> บริการของเรา
+            </h2>
+            <div class="flex gap-2 sm:gap-3 overflow-x-auto pb-2" id="service-tabs">
+                <button onclick="switchTab('home')" data-tab="home"
+                    class="service-btn bg-brand-500 text-white shadow-md shadow-brand-500/30 px-6 py-2 rounded-xl font-medium transition transform active:scale-95 whitespace-nowrap">
+                    <i class="fa-solid fa-store mr-1"></i> ID Game
+                </button>
+                <button onclick="switchTab('ff')" data-tab="ff"
+                    class="service-btn bg-white text-brand-600 border border-brand-200 px-6 py-2 rounded-xl font-medium hover:bg-brand-50 transition transform active:scale-95 whitespace-nowrap">
+                    <i class="fa-solid fa-fire mr-1"></i> เติม FF
+                </button>
+                <button onclick="switchTab('ml')" data-tab="ml"
+                    class="service-btn bg-white text-brand-600 border border-brand-200 px-6 py-2 rounded-xl font-medium hover:bg-brand-50 transition transform active:scale-95 whitespace-nowrap">
+                    <i class="fa-solid fa-gamepad mr-1"></i> เติม LM
+                </button>
+            </div>
+        </div>
+
+        <section id="home" class="tab-content active">
+            <div class="relative w-full h-44 md:h-72 rounded-2xl overflow-hidden mb-8 shadow-md border border-gray-100">
+                <div id="carousel-inner" class="flex w-full h-full transition-transform duration-700 ease-in-out">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        class="w-full h-full object-cover flex-shrink-0" alt="Slide 1">
+                    <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        class="w-full h-full object-cover flex-shrink-0" alt="Slide 2">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        class="w-full h-full object-cover flex-shrink-0" alt="Slide 3">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none"></div>
+                <div class="absolute bottom-3 w-full flex justify-center gap-2 z-10" id="carousel-dots">
+                    <div class="w-2.5 h-2.5 rounded-full bg-white shadow dot transition-all duration-300"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-white/40 shadow dot transition-all duration-300"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-white/40 shadow dot transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold border-l-4 border-brand-500 pl-2">ไอดีเกมอัปเดตใหม่</h3>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5" id="game-id-grid">
+            </div>
+        </section>
+
+        <section id="ff" class="tab-content">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800"><i
+                    class="fa-solid fa-fire text-brand-500"></i> เติมเพชร Free Fire</h2>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-5">
+                <label class="block font-medium mb-2 text-sm text-gray-700">1. กรอกข้อมูลผู้เล่น (เฉพาะตัวเลข)</label>
+                <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                    id="ff-uid" placeholder="กรอก UID ของคุณ"
+                    class="w-full border-2 border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white transition-all">
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-5">
+                <label class="block font-medium mb-3 text-sm text-gray-700">2. เลือกจำนวนเพชร</label>
+                <div class="grid grid-cols-3 gap-2 sm:gap-3" id="ff-packages">
+                </div>
+            </div>
+
+            <div id="ff-summary"
+                class="hidden bg-brand-50 border border-brand-200 rounded-2xl p-5 shadow-sm transform transition-all duration-300">
+                <div class="flex justify-between items-center text-gray-500 text-sm mb-1">
+                    <span>ราคาแพ็กเกจ:</span> <span id="ff-subtotal">฿0</span>
+                </div>
+                <div
+                    class="flex justify-between items-center text-gray-500 text-sm mb-3 pb-3 border-b border-brand-200/60">
+                    <span>ค่าธรรมเนียม:</span> <span id="ff-fee-show">฿0</span>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-800 font-bold">ยอดชำระสุทธิ:</span>
+                    <span class="text-2xl font-bold text-brand-600" id="ff-total">฿0</span>
+                </div>
+                <button onclick="openPaymentModal('ff')"
+                    class="w-full bg-brand-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-500/30 hover:bg-brand-600 active:scale-95 transition-all text-lg">ชำระเงินทันที</button>
+            </div>
+        </section>
+
+        <section id="ml" class="tab-content">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800"><i
+                    class="fa-solid fa-gamepad text-brand-500"></i> เติมเพชร Mobile Legends</h2>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-5">
+                <label class="block font-medium mb-2 text-sm text-gray-700">1. กรอกข้อมูลผู้เล่น (เฉพาะตัวเลข)</label>
+                <div class="flex gap-2">
+                    <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                        id="ml-userid" placeholder="User ID"
+                        class="w-2/3 border-2 border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white transition-all">
+                    <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                        id="ml-zoneid" placeholder="Zone ID"
+                        class="w-1/3 border-2 border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-400 bg-gray-50 focus:bg-white transition-all">
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-5">
+                <label class="block font-medium mb-3 text-sm text-gray-700">2. เลือกจำนวนเพชร</label>
+                <div class="grid grid-cols-3 gap-2 sm:gap-3" id="ml-packages">
+                </div>
+            </div>
+
+            <div id="ml-summary"
+                class="hidden bg-brand-50 border border-brand-200 rounded-2xl p-5 shadow-sm transform transition-all duration-300">
+                <div class="flex justify-between items-center text-gray-500 text-sm mb-1">
+                    <span>ราคาแพ็กเกจ:</span> <span id="ml-subtotal">฿0</span>
+                </div>
+                <div
+                    class="flex justify-between items-center text-gray-500 text-sm mb-3 pb-3 border-b border-brand-200/60">
+                    <span>ค่าธรรมเนียม:</span> <span id="ml-fee-show">฿0</span>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-800 font-bold">ยอดชำระสุทธิ:</span>
+                    <span class="text-2xl font-bold text-brand-600" id="ml-total">฿0</span>
+                </div>
+                <button onclick="openPaymentModal('ml')"
+                    class="w-full bg-brand-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-500/30 hover:bg-brand-600 active:scale-95 transition-all text-lg">ชำระเงินทันที</button>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="modal-payment"
+        class="modal-overlay fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div
+            class="modal-content bg-white rounded-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[95vh] shadow-2xl">
+            <div class="bg-brand-500 text-white p-4 flex justify-between items-center">
+                <h3 class="text-lg font-bold"><i class="fa-solid fa-qrcode mr-2"></i> สแกนเพื่อชำระเงิน</h3>
+                <button type="button" onclick="closeModal('modal-payment')"
+                    class="text-white hover:text-gray-200 p-2 focus:outline-none relative">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
+                </button>
+            </div>
+
+            <div class="p-5 overflow-y-auto">
+                <div class="text-center mb-4">
+                    <p class="text-gray-600 text-sm mb-1">กรุณาโอนเงินเข้าบัญชีตามยอดด้านล่าง</p>
+                    <div class="text-3xl font-bold text-brand-600 mb-4" id="pay-amount">฿0</div>
+
+                    <div class="inline-block p-2 border-2 border-brand-200 rounded-xl bg-white shadow-sm mb-2 relative">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg"
+                            alt="QR Code" class="w-40 h-40 object-contain opacity-80">
+                        <div
+                            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md">
+                            <i class="fa-solid fa-building-columns text-brand-500 text-xl m-1"></i>
+                        </div>
+                    </div>
+                    <p class="font-medium text-gray-800">ธนาคาร: กสิกรไทย</p>
+                    <p class="text-sm text-gray-500">ชื่อบัญชี: HmoobHawj Shop</p>
+                    <p class="text-sm text-gray-500 font-bold tracking-wider mt-1">เลขบัญชี: 123-4-56789-0</p>
+                </div>
+
+                <div class="bg-brand-50 border border-brand-100 rounded-xl p-3 mb-5 text-sm">
+                    <div class="flex justify-between mb-1"><span class="text-gray-500">เกม:</span><span id="pay-game"
+                            class="font-medium text-gray-800"></span></div>
+                    <div class="flex justify-between mb-1"><span class="text-gray-500">ข้อมูล:</span><span id="pay-id"
+                            class="font-medium text-gray-800"></span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">ได้รับ:</span><span id="pay-dia"
+                            class="font-medium text-brand-600"></span></div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-800 mb-2">อัปโหลดสลิปโอนเงิน <span
+                            class="text-red-500">*</span></label>
+                    <label for="slip-upload"
+                        class="file-upload-label flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 hover:border-brand-400 group">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <i id="slip-icon"
+                                class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 group-hover:text-brand-500 mb-2"></i>
+                            <p id="slip-text" class="text-sm text-gray-500 group-hover:text-brand-600 font-medium">
+                                กดเพื่อเลือกรูปภาพสลิป</p>
+                        </div>
+                        <input id="slip-upload" type="file" accept="image/*" onchange="handleFileUpload(event)" />
+                    </label>
+                </div>
+
+                <button onclick="confirmPayment()"
+                    class="w-full bg-brand-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-500/30 hover:bg-brand-600 active:scale-95 transition-all text-lg">
+                    ยืนยันการชำระเงิน
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-id"
+        class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div
+            class="modal-content bg-white rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] shadow-2xl">
+            <div class="relative">
+                <img id="modal-id-img" src="" alt="Game ID" class="w-full h-52 sm:h-64 object-cover">
+                <button type="button" onclick="closeModal('modal-id')"
+                    class="absolute top-3 right-3 bg-black/40 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/70 backdrop-blur transition p-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div id="modal-id-game"
+                    class="absolute bottom-3 left-3 bg-white/95 px-3 py-1 text-xs font-bold rounded-lg text-brand-600 shadow-sm border border-gray-100">
+                </div>
+            </div>
+            <div class="p-5 overflow-y-auto">
+                <h3 id="modal-id-name" class="text-lg sm:text-xl font-bold mb-1 text-gray-800"></h3>
+                <p id="modal-id-desc" class="text-gray-500 text-sm mb-4"></p>
+                <div class="bg-brand-50 border border-brand-100 p-3 rounded-xl mb-4 flex justify-between items-center">
+                    <span class="font-medium text-brand-700 text-sm">ราคา</span>
+                    <span id="modal-id-price" class="text-xl font-bold text-brand-600"></span>
+                </div>
+                <div class="space-y-2 mb-6 text-sm text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-100"
+                    id="modal-id-details"></div>
+                <button id="btn-buy-wa"
+                    class="w-full bg-[#25D366] text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-[#1EBE5D] active:scale-95 transition flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> สั่งซื้อผ่าน WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-history"
+        class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div
+            class="modal-content bg-white rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] shadow-2xl">
+            <div class="flex justify-between items-center p-5 border-b border-gray-100">
+                <h3 class="text-lg font-bold text-gray-800"><i
+                        class="fa-solid fa-clock-rotate-left text-brand-500 mr-2"></i>ประวัติการทำรายการ</h3>
+                <button type="button" onclick="closeModal('modal-history')"
+                    class="text-gray-400 hover:text-gray-600 bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center p-2"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto flex-1 bg-gray-50" id="history-container"></div>
+            <div class="p-4 border-t border-gray-100 bg-white">
+                <button onclick="clearHistory()"
+                    class="w-full py-3 text-red-500 text-sm font-medium hover:bg-red-50 rounded-xl transition border border-red-200">ล้างประวัติทั้งหมด</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"
+        class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 border border-gray-700">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-brand-400 text-lg"></i>
+        <span id="toast-msg" class="font-medium text-sm">ทำรายการสำเร็จ!</span>
+    </div>
+
+    <script>
+        // --- ข้อมูลสินค้า (เพิ่มเบอร์ wa แยกแต่ละอัน) ---
+        const gameIds = [
+            { id: 'G01', game: 'Free Fire', name: 'รหัสตึงๆ สกินปืน Evo เต็ม', price: 1590, img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80', desc: 'ล็อกอิน Facebook สกินปืนแรร์เยอะ', details: ['Lv. 72', 'ฮายาโตะปลุกพลัง', 'ปืน Evo แม็กซ์ 3 กระบอก'], wa: '66811111111' },
+            { id: 'G02', game: 'Mobile Legends', name: 'เมนจองซอน สกิน Legend', price: 2100, img: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80', desc: 'ไอดีสะอาด เปลี่ยนเมลได้ทันที', details: ['สกิน Legend 1', 'สกิน Epic 15', 'ฮีโร่ 102 ตัว'], wa: '66822222222' },
+            { id: 'G03', game: 'Free Fire', name: 'ไอดีเริ่มต้น สายลุยราคาเบา', price: 350, img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80', desc: 'มีชุดและสัตว์เลี้ยงครบ', details: ['Lv. 45', 'เพชรเหลือ 500', 'เปลี่ยนชื่อฟรี 1 ครั้ง'], wa: '66833333333' },
+            { id: 'G04', game: 'Mobile Legends', name: 'สเมิร์ฟแบกเพื่อน Grandmaster', price: 150, img: 'https://images.unsplash.com/photo-1534423861386-85a128d51a09?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80', desc: 'ฮีโร่เมตาครบจบๆ', details: ['Winrate 85%', 'สัญลักษณ์พร้อมลุย', 'ล็อกอิน Moonton'], wa: '66844444444' },
+            { id: 'G05', game: 'Free Fire', name: 'สายแฟชั่น ชุดซีซั่น 1-5', price: 4500, img: 'https://images.unsplash.com/photo-1580234811497-9df7f5c683b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80', desc: 'ไอดีท็อปเซิร์ฟ ชุดแรร์เพียบ', details: ['Lv. 80', 'ไลค์ 50,000+', 'ชุดซามูไรซอมบี้'], wa: '66855555555' },
+            { id: 'G06', game: 'Mobile Legends', name: 'เมนเมจ Collector ฟูลเอฟเฟกต์', price: 3200, img: 'https://images.unsplash.com/photo-1605901309584-818e25960b8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80', desc: 'สกินอลังการ เอฟเฟกต์เต็มระบบ', details: ['Collector Pharsa', 'สกิน Zodiac 4', 'Emblem แม็กซ์'], wa: '66866666666' },
+        ];
+
+        const ffPackages = [
+            { id: 'f1', dia: 100, price: 35, fee: 2 },
+            { id: 'f2', dia: 310, price: 99, fee: 3 },
+            { id: 'f3', dia: 520, price: 169, fee: 5 },
+            { id: 'f4', dia: 1060, price: 339, fee: 8 },
+            { id: 'f5', dia: 2180, price: 699, fee: 10 },
+            { id: 'f6', dia: 5600, price: 1799, fee: 15 }
+        ];
+
+        const mlPackages = [
+            { id: 'm1', dia: 86, price: 29, fee: 2 },
+            { id: 'm2', dia: 172, price: 59, fee: 3 },
+            { id: 'm3', dia: 257, price: 89, fee: 4 },
+            { id: 'm4', dia: 344, price: 119, fee: 5 },
+            { id: 'm5', dia: 514, price: 179, fee: 7 },
+            { id: 'm6', dia: 706, price: 249, fee: 10 },
+        ];
+
+        let selectedFF = null, selectedML = null;
+        let pendingTransaction = null;
+        let hasUploadedSlip = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCarousel();
+            renderGameIds();
+            renderPackages('ff-packages', ffPackages, 'ff');
+            renderPackages('ml-packages', mlPackages, 'ml');
+        });
+
+        function initCarousel() {
+            const inner = document.getElementById('carousel-inner');
+            const dots = document.querySelectorAll('.dot');
+            let currentIndex = 0;
+            const totalSlides = 3;
+
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                inner.style.transform = `translateX(-${currentIndex * 100}%)`;
+                dots.forEach((dot, index) => {
+                    if (index === currentIndex) {
+                        dot.classList.remove('bg-white/40');
+                        dot.classList.add('bg-white', 'w-4');
+                    } else {
+                        dot.classList.remove('bg-white', 'w-4');
+                        dot.classList.add('bg-white/40');
+                    }
+                });
+            }, 3500);
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.service-btn').forEach(btn => {
+                if (btn.dataset.tab === tabId) {
+                    btn.className = "service-btn bg-brand-500 text-white shadow-md shadow-brand-500/30 px-6 py-2 rounded-xl font-medium transition transform active:scale-95 whitespace-nowrap";
+                } else {
+                    btn.className = "service-btn bg-white text-brand-600 border border-brand-200 px-6 py-2 rounded-xl font-medium hover:bg-brand-50 transition transform active:scale-95 whitespace-nowrap";
+                }
+            });
+        }
+
+        function renderGameIds() {
+            const container = document.getElementById('game-id-grid');
+            container.innerHTML = gameIds.map(item => `
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transform transition duration-300 hover:scale-[1.03] hover:shadow-lg cursor-pointer group flex flex-col h-full" onclick="openIdModal('${item.id}')">
+                    <div class="relative w-full aspect-square sm:aspect-[4/3] overflow-hidden border-b border-gray-100">
+                        <img src="${item.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                        <div class="absolute top-2 left-2 bg-black/50 backdrop-blur-md text-white text-[9px] sm:text-[10px] px-2 py-1 rounded-md font-medium tracking-wide">${item.game}</div>
+                        <div class="absolute bottom-2 right-2 bg-brand-500 text-white text-[10px] sm:text-xs px-2.5 py-1 rounded-md shadow-md font-medium">พร้อมขาย</div>
+                    </div>
+                    <div class="p-3 flex flex-col flex-1">
+                        <h4 class="font-bold text-gray-800 text-[13px] sm:text-sm mb-1 leading-snug line-clamp-2">${item.name}</h4>
+                        <div class="mt-auto flex justify-between items-end pt-2">
+                            <span class="text-brand-600 font-extrabold text-sm sm:text-lg">฿${item.price.toLocaleString()}</span>
+                            <span class="text-[9px] sm:text-[10px] bg-brand-50 text-brand-600 font-medium px-2 py-1 rounded border border-brand-100 group-hover:bg-brand-500 group-hover:text-white transition">ดูข้อมูล</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPackages(containerId, packages, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = packages.map(pkg => `
+                <div class="pkg-card border-2 border-gray-100 bg-white rounded-xl py-3 px-1 sm:px-2 cursor-pointer transition-all hover:border-brand-200 hover:bg-brand-50 flex flex-col items-center text-center shadow-sm" 
+                     id="pkg-${type}-${pkg.id}" onclick="selectPackage('${pkg.id}', '${type}')">
+                    <img src="${type === 'ff' ? 'https://cdn-icons-png.flaticon.com/512/8373/8373117.png' : 'https://cdn-icons-png.flaticon.com/512/6124/6124231.png'}" class="w-6 h-6 sm:w-9 sm:h-9 mb-1.5 drop-shadow-sm opacity-90">
+                    <span class="font-bold text-gray-800 text-[11px] sm:text-sm leading-tight">${pkg.dia} <span class="text-[9px] sm:text-xs font-normal text-gray-500 block sm:inline">เพชร</span></span>
+                    <span class="text-brand-600 font-bold text-[10px] sm:text-sm mt-0.5 sm:mt-1">฿${pkg.price}</span>
+                </div>
+            `).join('');
+        }
+
+        function selectPackage(pkgId, type) {
+            document.querySelectorAll(`#${type}-packages .pkg-card`).forEach(el => {
+                el.classList.remove('border-brand-500', 'bg-brand-50', 'ring-2', 'ring-brand-500/20');
+                el.classList.add('border-gray-100', 'bg-white');
+            });
+
+            const activeCard = document.getElementById(`pkg-${type}-${pkgId}`);
+            activeCard.classList.remove('border-gray-100', 'bg-white');
+            activeCard.classList.add('border-brand-500', 'bg-brand-50', 'ring-2', 'ring-brand-500/20');
+
+            const packages = type === 'ff' ? ffPackages : mlPackages;
+            const pkg = packages.find(p => p.id === pkgId);
+            const total = pkg.price + pkg.fee;
+
+            if (type === 'ff') {
+                selectedFF = pkg;
+                document.getElementById('ff-subtotal').innerText = `฿${pkg.price}`;
+                document.getElementById('ff-fee-show').innerText = `฿${pkg.fee}`;
+                document.getElementById('ff-total').innerText = `฿${total}`;
+                document.getElementById('ff-summary').classList.remove('hidden');
+            } else {
+                selectedML = pkg;
+                document.getElementById('ml-subtotal').innerText = `฿${pkg.price}`;
+                document.getElementById('ml-fee-show').innerText = `฿${pkg.fee}`;
+                document.getElementById('ml-total').innerText = `฿${total}`;
+                document.getElementById('ml-summary').classList.remove('hidden');
+            }
+        }
+
+        // --- ระบบชำระเงิน ---
+        function openPaymentModal(type) {
+            let gameName, accountInfo, pkg, total;
+
+            if (type === 'ff') {
+                const uid = document.getElementById('ff-uid').value.trim();
+                if (!uid) return showToast('กรุณากรอก UID ก่อน', 'error');
+                if (!selectedFF) return showToast('กรุณาเลือกแพ็กเกจ', 'error');
+                gameName = 'Free Fire';
+                accountInfo = `UID: ${uid}`;
+                pkg = selectedFF;
+            } else {
+                const uid = document.getElementById('ml-userid').value.trim();
+                const zone = document.getElementById('ml-zoneid').value.trim();
+                if (!uid || !zone) return showToast('กรุณากรอกข้อมูลผู้เล่นให้ครบถ้วน', 'error');
+                if (!selectedML) return showToast('กรุณาเลือกแพ็กเกจ', 'error');
+                gameName = 'Mobile Legends';
+                accountInfo = `ID: ${uid} (${zone})`;
+                pkg = selectedML;
+            }
+
+            total = pkg.price + pkg.fee;
+
+            // บันทึกเฉพาะราคาเพชรลงประวัติ
+            pendingTransaction = {
+                type: type,
+                game: gameName,
+                account: accountInfo,
+                dia: pkg.dia,
+                price: pkg.price // ส่งเฉพาะราคาต้นทุนไปในประวัติ
+            };
+
+            hasUploadedSlip = false;
+            document.getElementById('slip-upload').value = '';
+            document.getElementById('slip-icon').className = 'fa-solid fa-cloud-arrow-up text-2xl text-gray-400 group-hover:text-brand-500 mb-2';
+            document.getElementById('slip-text').innerText = 'กดเพื่อเลือกรูปภาพสลิป';
+            document.getElementById('slip-text').className = 'text-sm text-gray-500 group-hover:text-brand-600 font-medium';
+
+            document.getElementById('pay-amount').innerText = `฿${total}`;
+            document.getElementById('pay-game').innerText = gameName;
+            document.getElementById('pay-id').innerText = accountInfo;
+            document.getElementById('pay-dia').innerText = `${pkg.dia} เพชร`;
+
+            document.getElementById('modal-payment').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                hasUploadedSlip = true;
+                document.getElementById('slip-icon').className = 'fa-solid fa-circle-check text-2xl text-brand-500 mb-2';
+                document.getElementById('slip-text').innerText = `อัปโหลดสลิปแล้ว: ${file.name.substring(0, 15)}...`;
+                document.getElementById('slip-text').className = 'text-sm text-brand-600 font-bold';
+            }
+        }
+
+        function confirmPayment() {
+            if (!hasUploadedSlip) {
+                return showToast('กรุณาอัปโหลดสลิปการโอนเงินก่อนยืนยัน', 'error');
+            }
+
+            const history = JSON.parse(localStorage.getItem('gameShopHistory') || '[]');
+            const record = { ...pendingTransaction, date: new Date().toISOString() };
+            history.unshift(record);
+            localStorage.setItem('gameShopHistory', JSON.stringify(history));
+
+            showToast(`สั่งซื้อ ${pendingTransaction.dia} เพชร สำเร็จ ระบบกำลังตรวจสอบบิล`, 'success');
+
+            if (pendingTransaction.type === 'ff') {
+                document.getElementById('ff-uid').value = '';
+                document.getElementById('ff-summary').classList.add('hidden');
+                selectedFF = null;
+                renderPackages('ff-packages', ffPackages, 'ff');
+            } else {
+                document.getElementById('ml-userid').value = '';
+                document.getElementById('ml-zoneid').value = '';
+                document.getElementById('ml-summary').classList.add('hidden');
+                selectedML = null;
+                renderPackages('ml-packages', mlPackages, 'ml');
+            }
+
+            closeModal('modal-payment');
+        }
+
+        // --- Modals อื่นๆ ---
+        function openIdModal(id) {
+            const item = gameIds.find(g => g.id === id);
+            if (!item) return;
+
+            document.getElementById('modal-id-img').src = item.img;
+            document.getElementById('modal-id-game').innerText = item.game;
+            document.getElementById('modal-id-name').innerText = item.name;
+            document.getElementById('modal-id-desc').innerText = item.desc;
+            document.getElementById('modal-id-price').innerText = `฿${item.price.toLocaleString()}`;
+
+            document.getElementById('modal-id-details').innerHTML = item.details.map(d =>
+                `<div class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-brand-500"></i> ${d}</div>`
+            ).join('');
+
+            // ใช้เบอร์โทร (wa) ที่มาจากข้อมูลสินค้า
+            const msg = encodeURIComponent(`สวัสดีครับ สนใจซื้อไอดี ${item.game} รหัส [${item.id}] ${item.name} ราคา ${item.price} บาท`);
+            document.getElementById('btn-buy-wa').onclick = () => window.open(`https://wa.me/${item.wa}?text=${msg}`, '_blank');
+
+            document.getElementById('modal-id').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openHistory() {
+            const container = document.getElementById('history-container');
+            const history = JSON.parse(localStorage.getItem('gameShopHistory') || '[]');
+
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-40 text-gray-400">
+                        <i class="fa-solid fa-box-open text-4xl mb-3 text-gray-300"></i>
+                        <p class="text-sm">ยังไม่มีประวัติการทำรายการ</p>
+                    </div>`;
+            } else {
+                container.innerHTML = history.map(h => {
+                    const dateObj = new Date(h.date);
+                    const dateStr = dateObj.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
+                    const timeStr = dateObj.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+                    return `
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 mb-3 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="font-bold text-gray-800 text-sm">${h.game}</span>
+                            <span class="bg-yellow-100 text-yellow-700 text-[10px] px-2 py-0.5 rounded font-bold">กำลังตรวจสอบ</span>
+                        </div>
+                        <div class="text-xs text-gray-500 mb-3">${h.account}</div>
+                        <div class="flex justify-between items-center pb-2 border-b border-gray-50 mb-2">
+                            <span class="text-brand-600 text-sm font-bold flex items-center gap-1"><i class="fa-regular fa-gem"></i> ${h.dia}</span>
+                            <span class="text-sm font-bold text-gray-800">฿${h.price}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] text-gray-400">
+                            <span><i class="fa-regular fa-calendar mr-1"></i> ${dateStr}</span>
+                            <span><i class="fa-regular fa-clock mr-1"></i> ${timeStr} น.</span>
+                        </div>
+                    </div>
+                `}).join('');
+            }
+
+            document.getElementById('modal-history').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function clearHistory() {
+            if (confirm('คุณต้องการล้างประวัติทั้งหมดใช่หรือไม่?')) {
+                localStorage.removeItem('gameShopHistory');
+                openHistory();
+            }
+        }
+
+        // ฟังก์ชันสำหรับปิด Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // กดพื้นที่ว่างสีดำเพื่อปิด Modal
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function (e) {
+                if (e.target === this) closeModal(this.id);
+            });
+        });
+
+        // --- Util ---
+        let toastTimeout;
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+
+            document.getElementById('toast-msg').innerText = msg;
+
+            if (type === 'error') {
+                icon.className = 'fa-solid fa-circle-exclamation text-red-400 text-lg';
+                toast.classList.replace('bg-gray-800', 'bg-red-600');
+            } else {
+                icon.className = 'fa-solid fa-circle-check text-brand-400 text-lg';
+                toast.classList.replace('bg-red-600', 'bg-gray-800');
+            }
+
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>
