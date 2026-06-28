@@ -110,6 +110,20 @@
         .file-upload-label:active {
             transform: scale(0.98);
         }
+
+        /* เพิ่มพื้นที่รับสัมผัสให้ปุ่มกดบนมือถือ */
+        .modal-close-btn {
+            padding: 15px !important;
+            /* ขยายพื้นที่คลิกให้ใหญ่ขึ้น */
+            margin: -10px;
+            /* ดึงกลับให้ตำแหน่งเดิม */
+            touch-action: manipulation;
+        }
+
+        .header-btn {
+            padding: 10px !important;
+            touch-action: manipulation;
+        }
     </style>
 </head>
 
@@ -123,10 +137,10 @@
             <h1 class="font-bold text-xl text-gray-800 tracking-tight">Hmoob<span class="text-brand-500">Hawj</span>
             </h1>
         </div>
-        <button onclick="openHistory()"
-            class="flex items-center gap-2 px-3 py-1.5 bg-brand-50 text-brand-600 rounded-full font-medium hover:bg-brand-100 transition shadow-sm border border-brand-100">
+        <button type="button" onclick="openHistory()"
+            class="header-btn flex items-center gap-2 bg-brand-50 text-brand-600 rounded-full font-medium hover:bg-brand-100 transition shadow-sm border border-brand-100">
             <i class="fa-solid fa-clock-rotate-left"></i>
-            <span class="text-sm">ประวัติ</span>
+            <span class="text-sm hidden sm:inline">ประวัติ</span>
         </button>
     </header>
 
@@ -262,8 +276,8 @@
             <div class="bg-brand-500 text-white p-4 flex justify-between items-center">
                 <h3 class="text-lg font-bold"><i class="fa-solid fa-qrcode mr-2"></i> สแกนเพื่อชำระเงิน</h3>
                 <button type="button" onclick="closeModal('modal-payment')"
-                    class="text-white hover:text-gray-200 p-2 focus:outline-none relative">
-                    <i class="fa-solid fa-xmark text-2xl"></i>
+                    class="modal-close-btn text-white hover:text-gray-200 focus:outline-none">
+                    <i class="fa-solid fa-xmark text-3xl"></i>
                 </button>
             </div>
 
