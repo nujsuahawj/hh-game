@@ -387,6 +387,10 @@
         <span id="toast-msg" class="font-medium text-sm">ทำรายการสำเร็จ!</span>
     </div>
 
+    <div id="snow-container"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; overflow: hidden;">
+    </div>
+
     <script>
         // --- ข้อมูลสินค้า (เพิ่มเบอร์ wa แยกแต่ละอัน) ---
         const gameIds = [
@@ -711,6 +715,48 @@
                 toast.classList.remove('show');
             }, 3000);
         }
+
+        // snow
+        function createSnow() {
+            const snowContainer = document.getElementById('snow-container');
+            const snowCount = 50; // จำนวนหิมะ (ปรับเพิ่ม/ลดได้)
+
+            for (let i = 0; i < snowCount; i++) {
+                const snow = document.createElement('div');
+                snow.className = 'snow';
+
+                // สุ่มตำแหน่งเริ่มต้น ขนาด และความเร็ว
+                const size = Math.random() * 5 + 2 + 'px';
+                const left = Math.random() * 100 + '%';
+                const duration = Math.random() * 3 + 7 + 's';
+                const opacity = Math.random();
+
+                snow.style.position = 'absolute';
+                snow.style.width = size;
+                snow.style.height = size;
+                snow.style.backgroundColor = '#10b981';
+                snow.style.borderRadius = '50%';
+                snow.style.left = left;
+                snow.style.top = '-10px';
+                snow.style.opacity = opacity;
+                snow.style.animation = `snowFall ${duration} linear infinite`;
+
+                snowContainer.appendChild(snow);
+            }
+        }
+
+        // เพิ่ม Animation เข้าไปใน style ของหน้าเว็บ
+        const style = document.createElement('style');
+        style.innerHTML = `
+        @keyframes snowFall {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+    `;
+        document.head.appendChild(style);
+
+        // รันฟังก์ชันสร้างหิมะ
+        createSnow();
     </script>
 </body>
 
